@@ -28,8 +28,10 @@
     /// </summary>
     private void InitializeComponent( )
     {
+            this.components = new System.ComponentModel.Container();
             this.tableauJeu = new System.Windows.Forms.TableLayoutPanel();
             this.buttonQuitterPartie = new System.Windows.Forms.Button();
+            this.timerDescente = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // tableauJeu
@@ -102,6 +104,12 @@
             this.buttonQuitterPartie.UseVisualStyleBackColor = true;
             this.buttonQuitterPartie.Click += new System.EventHandler(this.buttonQuitterPartie_Click);
             // 
+            // timerDescente
+            // 
+            this.timerDescente.Enabled = true;
+            this.timerDescente.Interval = 500;
+            this.timerDescente.Tick += new System.EventHandler(this.timerDescente_Tick);
+            // 
             // TitrisForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -116,6 +124,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Titris";
             this.Load += new System.EventHandler(this.frmLoad);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TitrisForm_KeyDown);
             this.ResumeLayout(false);
 
     }
@@ -124,6 +133,7 @@
 
     private System.Windows.Forms.TableLayoutPanel tableauJeu;
         private System.Windows.Forms.Button buttonQuitterPartie;
+        private System.Windows.Forms.Timer timerDescente;
     }
 }
 
