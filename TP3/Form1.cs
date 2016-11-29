@@ -14,7 +14,11 @@ namespace TP3
         // CDThibodeau
         #region Valeurs Partagées
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        int typePiece;
+                
         /// <summary>
         /// Images représentant un des blocs aléatoires, un bloc gelé ou un espace vide
         /// </summary>
@@ -23,7 +27,7 @@ namespace TP3
         /// <summary>
         /// Tableau représentant le bloc que le joueur peut bouger.
         /// </summary>
-        Bitmap[,] blocActif;
+        int[,] blocActif;
 
         /// <summary>
         /// Ligne où se situe le coin en haut à gauche du tableau blocActif.
@@ -47,7 +51,7 @@ namespace TP3
 
         /// <summary>
         /// Valeur de la touche appuyé lors du déplacement
-        /// (ne sert que de lien pour que la fonction "BloPeutBouger" puisse être appelé dans l'évènement "timerDescente_Tick")
+        /// (ne sert que de lien pour que la fonction "BlocPeutBouger" puisse être appelé dans l'évènement "timerDescente_Tick")
         /// </summary>
         int deplacement;
         #endregion
@@ -136,14 +140,7 @@ namespace TP3
             int typePiece = rnd.Next(2, 9);
             if (typePiece == (int)TypeBloc.Carre) // Carré
             {
-                blocActif = new Bitmap[2, 2] { { imagesBlocs[typePiece], imagesBlocs[typePiece] }, { imagesBlocs[typePiece], imagesBlocs[typePiece] } };
-                for (int i = 0; i < 2; i++)
-                {
-                    for (int j = 0; j < 2; j++)
-                    {
-                        toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
-                    }
-                }
+                blocActif = new int[2, 2] { { 2, 2 }, { 2,2 } };
             }
             else if (typePiece == (int)TypeBloc.Barre) // Barre
             {
@@ -151,81 +148,32 @@ namespace TP3
                 int sens = rndSens.Next(0, 2);
                 if (sens == 0)
                 {
-                    blocActif = new Bitmap[4, 1] { { imagesBlocs[typePiece] }, { imagesBlocs[typePiece] }, { imagesBlocs[typePiece] }, { imagesBlocs[typePiece] } };
-                    for (int i = 0; i < 4; i++)
-                    {
-                        for (int j = 0; j < 1; j++)
-                        {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
-                        }
-                    }
+                    blocActif = new int[4, 1] { { 3 }, { 3 }, { 3 }, { 3 } };
                 }
                 else
                 {
-                    blocActif = new Bitmap[1, 4] { { imagesBlocs[typePiece], imagesBlocs[typePiece], imagesBlocs[typePiece], imagesBlocs[typePiece] } };
-                    for (int i = 0; i < 1; i++)
-                    {
-                        for (int j = 0; j < 4; j++)
-                        {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
-                        }
-                    }
+                    blocActif = new int[1, 4] { { 3, 3, 3, 3 } };
                 }
             }
             else if (typePiece == (int)TypeBloc.T) // Bloc T
             {
-                blocActif = new Bitmap[2, 3] { { imagesBlocs[(int)TypeBloc.Aucun], imagesBlocs[typePiece], imagesBlocs[(int)TypeBloc.Aucun] }, { imagesBlocs[typePiece], imagesBlocs[typePiece], imagesBlocs[typePiece] } };
-                for (int i = 0; i < 2; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
-                    }
-                }
+                blocActif = new int[2, 3] { { 0, 4, 0 }, { 4, 4, 4 } };
             }
             else if (typePiece == (int)TypeBloc.L) // Bloc L
             {
-                blocActif = new Bitmap[3, 2] { { imagesBlocs[typePiece], imagesBlocs[(int)TypeBloc.Aucun] }, { imagesBlocs[typePiece], imagesBlocs[(int)TypeBloc.Aucun] }, { imagesBlocs[typePiece], imagesBlocs[typePiece] } };
-                for (int i = 0; i < 3; i++)
-                {
-                    for (int j = 0; j < 2; j++)
-                    {
-                        toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
-                    }
-                }
+                blocActif = new int[3, 2] { { 5, 0 }, { 5, 0 }, { 5, 5 } };
             }
             else if (typePiece == (int)TypeBloc.J) // Bloc J
             {
-                blocActif = new Bitmap[3, 2] { { imagesBlocs[(int)TypeBloc.Aucun], imagesBlocs[typePiece] }, { imagesBlocs[(int)TypeBloc.Aucun], imagesBlocs[typePiece] }, { imagesBlocs[typePiece], imagesBlocs[typePiece] } };
-                for (int i = 0; i < 3; i++)
-                {
-                    for (int j = 0; j < 2; j++)
-                    {
-                        toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
-                    }
-                }
+                blocActif = new int[3, 2] { { 0, 6 }, { 0, 6 }, { 6, 6 } };
             }
             else if (typePiece == (int)TypeBloc.S) // Bloc S
             {
-                blocActif = new Bitmap[2, 3] { { imagesBlocs[(int)TypeBloc.Aucun], imagesBlocs[typePiece], imagesBlocs[typePiece] }, { imagesBlocs[typePiece], imagesBlocs[typePiece], imagesBlocs[(int)TypeBloc.Aucun] } };
-                for (int i = 0; i < 2; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
-                    }
-                }
+                blocActif = new int[2, 3] { { 0, 7, 7 }, { 7, 7, 0 } };
             }
             else if (typePiece == (int)TypeBloc.Z) // Bloc Z
             {
-                blocActif = new Bitmap[2, 3] { { imagesBlocs[typePiece], imagesBlocs[typePiece], imagesBlocs[(int)TypeBloc.Aucun] }, { imagesBlocs[(int)TypeBloc.Aucun], imagesBlocs[typePiece], imagesBlocs[typePiece] } };
-                for (int i = 0; i < 2; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
-                    }
-                }
+                blocActif = new int[2, 3] { { 8, 8, 0 }, { 0, 8, 8 } };
             }
 
         }
@@ -245,14 +193,20 @@ namespace TP3
             {
                 for (int i = 0; i < blocActif.GetLength(0); i++)
                 {
-                    if (colonneCourante == 0)
+                    for (int j = 0; j < blocActif.GetLength(1); j++)
                     {
-                        peutBouger = false;
-                    }
-                    else
-                    if (toutesImagesVisuelles[ligneCourante + i, colonneCourante - 1].Image == imagesBlocs[(int)TypeBloc.Gele])
-                    {
-                        peutBouger = false;
+                        if (colonneCourante == 0)
+                        {
+                            peutBouger = false;
+                        }
+                        else
+                        if (blocActif[i, j - 1] == 1)
+                        {
+                            if (blocActif[i, j] != 0)
+                            {
+                                peutBouger = false;
+                            }
+                        }
                     }
                 }
             }
@@ -260,62 +214,44 @@ namespace TP3
             {
                 for (int i = 0; i < blocActif.GetLength(0); i++)
                 {
-                    if (colonneCourante + blocActif.GetLength(1) == nbColonnes)
+                    for (int j = 0; j < blocActif.GetLength(1); j++)
                     {
-                        peutBouger = false;
-                    }
-                    else
-                    if (toutesImagesVisuelles[ligneCourante + i, colonneCourante + blocActif.GetLength(1)].Image == imagesBlocs[(int)TypeBloc.Gele])
-                    {
-                        peutBouger = false;
+                        if (colonneCourante + blocActif.GetLength(1) == nbColonnes)
+                        {
+                            peutBouger = false;
+                        }
+                        else if (blocActif[i, blocActif.GetLength(1)] == 1)
+                        {
+                            if (blocActif[i, blocActif.GetLength(1) - 1] == 1)
+                            {
+                                peutBouger = false;
+                            }
+                        }
                     }
                 }
             }
             else // Si déplacement vers le bas
             {
-                for (int j = 0; j < blocActif.GetLength(1); j++)
+                for (int i = 0; i < blocActif.GetLength(0); i++)
                 {
-                    if (ligneCourante + blocActif.GetLength(0) == nbLignes) // Si le bloc atteint le fond
+                    for (int j = 0; j < blocActif.GetLength(1); j++)
                     {
-                        peutBouger = false;
-                        for (int iGeler = 0; iGeler < blocActif.GetLength(0); iGeler++)
-                        {
-                            for (int jGeler = 0; jGeler < blocActif.GetLength(1); jGeler++)
-                            {
-                                if (blocActif[iGeler, jGeler] != imagesBlocs[(int)TypeBloc.Aucun])
-                                {
-                                    blocActif[iGeler, jGeler] = imagesBlocs[(int)TypeBloc.Gele];
-                                    toutesImagesVisuelles[ligneCourante + iGeler, colonneCourante + jGeler].Image = blocActif[iGeler, jGeler];
-                                }
-                            }
-                        }
-                        ligneCourante = 0;
-                        colonneCourante = 4;
-                        GenerationPiece();
-                    }
-                    else if (toutesImagesVisuelles[ligneCourante + blocActif.GetLength(0), colonneCourante + j].Image == imagesBlocs[(int)TypeBloc.Gele])
-                    {
-                        if (toutesImagesVisuelles[(ligneCourante + blocActif.GetLength(0)) - 1, colonneCourante + j].Image != imagesBlocs[(int)TypeBloc.Aucun])
+                        if (ligneCourante + blocActif.GetLength(0) == nbLignes) // Si le bloc atteint le fond
                         {
                             peutBouger = false;
-                            for (int iGeler = 0; iGeler < blocActif.GetLength(0); iGeler++)
-                            {
-                                for (int jGeler = 0; jGeler < blocActif.GetLength(1); jGeler++)
-                                {
-                                    if (blocActif[iGeler, jGeler] != imagesBlocs[(int)TypeBloc.Aucun])
-                                    {
-                                        blocActif[iGeler, jGeler] = imagesBlocs[(int)TypeBloc.Gele];
-                                        toutesImagesVisuelles[ligneCourante + iGeler, colonneCourante + jGeler].Image = blocActif[iGeler, jGeler];
-                                    }
-                                }
-                            }
                             ligneCourante = 0;
                             colonneCourante = 4;
                             GenerationPiece();
                         }
-                        else
+                        else if (blocActif[blocActif.GetLength(0), j] == 1)
                         {
-                            blocActif[blocActif.GetLength(0) - 1, j] = imagesBlocs[(int)TypeBloc.Gele];
+                            if (blocActif[blocActif.GetLength(0) - 1, j] == 1)
+                            {
+                                peutBouger = false;
+                                ligneCourante = 0;
+                                colonneCourante = 4;
+                                GenerationPiece();
+                            }
                         }
                     }
                 }
@@ -342,6 +278,7 @@ namespace TP3
         /// <param name="e"></param>
         private void TitrisForm_KeyDown(object sender, KeyEventArgs e)
         {
+            AfficherJeu();
             int deplacement = e.KeyValue;
             if (deplacement == 65)
             {
@@ -351,18 +288,12 @@ namespace TP3
                     {
                         for (int j = 0; j < blocActif.GetLength(1); j++)
                         {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
-                        }
-                    }
-                    colonneCourante -= 1;
-                    for (int i = 0; i < blocActif.GetLength(0); i++)
-                    {
-                        for (int j = 0; j < blocActif.GetLength(1); j++)
-                        {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
+                            blocActif[i, j] = 0;
+                            blocActif[i, j - 1] = typePiece;
                         }
                     }
                 }
+                AfficherJeu();
             }
             else if (deplacement == 68)
             {
@@ -374,19 +305,13 @@ namespace TP3
                         {
                             for (int j = 0; j < blocActif.GetLength(1); j++)
                             {
-                                toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
-                            }
-                        }
-                        colonneCourante += 1;
-                        for (int i = 0; i < blocActif.GetLength(0); i++)
-                        {
-                            for (int j = 0; j < blocActif.GetLength(1); j++)
-                            {
-                                toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
+                                blocActif[i, j] = 0;
+                                blocActif[i, j + 1] = typePiece;
                             }
                         }
                     }
                 }
+                AfficherJeu();
             }
             else if (deplacement == 83)
             {
@@ -396,18 +321,12 @@ namespace TP3
                     {
                         for (int j = 0; j < blocActif.GetLength(1); j++)
                         {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
-                        }
-                    }
-                    ligneCourante += 1;
-                    for (int i = 0; i < blocActif.GetLength(0); i++)
-                    {
-                        for (int j = 0; j < blocActif.GetLength(1); j++)
-                        {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
+                            blocActif[i, j] = 0;
+                            blocActif[i + 1, j] = typePiece;
                         }
                     }
                 }
+                AfficherJeu();
             }
         }
         // CDThibodeau
@@ -420,22 +339,24 @@ namespace TP3
         /// <param name="e"></param>
         private void timerDescente_Tick(object sender, EventArgs e)
         {
-            if (BlocPeutBouger(deplacement) == true)
+            for (int i = 0; i < blocActif.GetLength(0); i++)
             {
-                for (int i = 0; i < blocActif.GetLength(0); i++)
+                for (int j = 0; j < blocActif.GetLength(1); j++)
                 {
-                    for (int j = 0; j < blocActif.GetLength(1); j++)
-                    {
-                        toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
-                    }
+                    blocActif[i, j] = 0;
+                    GenerationPiece();
                 }
-                ligneCourante += 1;
-                for (int i = 0; i < blocActif.GetLength(0); i++)
+            }
+            AfficherJeu();
+        }
+
+        void AfficherJeu()
+        {
+            for (int i = 0; i < blocActif.GetLength(0); i++)
+            {
+                for (int j = 0; j < blocActif.GetLength(1); j++)
                 {
-                    for (int j = 0; j < blocActif.GetLength(1); j++)
-                    {
-                        toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = blocActif[i, j];
-                    }
+                    toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)blocActif[i, j]];
                 }
             }
         }
