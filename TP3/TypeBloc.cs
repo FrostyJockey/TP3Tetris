@@ -1,15 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace TP3
 {
     enum TypeBloc
     {
-        blocL,
-        blocT,
-        blocCarre,
-        blocJ,
-        blocBarre,
-        none,
-        gele
+        Aucun,
+        Gele,
+        Carre,
+        Barre,
+        T,
+        L,
+        J,
+        S,
+        Z
     }
 }
