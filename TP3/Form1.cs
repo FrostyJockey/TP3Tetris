@@ -200,7 +200,7 @@ namespace TP3
                             peutBouger = false;
                         }
                         else
-                        if (toutesImagesVisuelles[ligneCourante + i, colonneCourante - 1].Image == imagesBlocs[(int)TypeBloc.Gele])
+                        if (blocActif[i, 0] == (int)TypeBloc.Gele)
                         {
                             if (blocActif[i, j] != 0)
                             {
@@ -220,7 +220,7 @@ namespace TP3
                         {
                             peutBouger = false;
                         }
-                        else if (toutesImagesVisuelles[ligneCourante + i, colonneCourante + blocActif.GetLength(1)].Image == imagesBlocs[(int)TypeBloc.Gele])
+                        else if (blocActif[i, blocActif.GetLength(1)-1] == (int)TypeBloc.Gele)
                         {
                             if (blocActif[i, j] != 0)
                             {
@@ -236,11 +236,11 @@ namespace TP3
                 {
                     for (int j = 0; j < blocActif.GetLength(1); j++)
                     {
-                        if ((ligneCourante + blocActif.GetLength(0) - 1) == nbLignes) // Si le bloc atteint le fond
+                        if (ligneCourante + blocActif.GetLength(0) - 1 == 20) // Si le bloc atteint le fond
                         {
                             peutBouger = false;
                         }
-                        else if (toutesImagesVisuelles[(ligneCourante + blocActif.GetLength(0) - 1), colonneCourante + j].Image == imagesBlocs[(int)TypeBloc.Gele])
+                        else if (blocActif[blocActif.GetLength(0)-1, j] == (int)TypeBloc.Gele)
                         {
                             peutBouger = false;
                         }
@@ -269,7 +269,6 @@ namespace TP3
         /// <param name="e"></param>
         private void TitrisForm_KeyDown(object sender, KeyEventArgs e)
         {
-            AfficherJeu();
             int deplacement = e.KeyValue;
             if (deplacement == 65) // Déplacement gauche
             {
@@ -290,8 +289,6 @@ namespace TP3
             {
                 if ((BlocPeutBouger(deplacement) == true))
                 {
-                    if ((colonneCourante + blocActif.GetLength(1) < nbColonnes) && (toutesImagesVisuelles[ligneCourante, (colonneCourante + blocActif.GetLength(1))].Image != imagesBlocs[(int)TypeBloc.Gele]))
-                    {
                         for (int i = 0; i < blocActif.GetLength(0); i++)
                         {
                             for (int j = 0; j < blocActif.GetLength(1); j++)
@@ -300,7 +297,6 @@ namespace TP3
                             }
                         }
                         colonneCourante += 1;
-                    }
                 }
                 AfficherJeu();
             }
@@ -316,16 +312,6 @@ namespace TP3
                         }
                     }
                     ligneCourante += 1;
-                }
-                else if (BlocPeutBouger(deplacement) == false)
-                {
-                    for (int i = 0; i < blocActif.GetLength(0); i++)
-                    {
-                        for (int j = 0; j < blocActif.GetLength(1); j++)
-                        {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Gele];
-                        }
-                    }
                 }
                 AfficherJeu();
             }
@@ -356,32 +342,58 @@ namespace TP3
             }
             AfficherJeu();
         }
+        // CDThibodeau
 
+        // CDThibodeau
         void AfficherJeu()
         {
             for (int i = 0; i < blocActif.GetLength(0); i++)
             {
                 for (int j = 0; j < blocActif.GetLength(1); j++)
                 {
-                    if ((ligneCourante + blocActif.GetLength(0) - 1) != 20)
+                    if (ligneCourante + blocActif.GetLength(0) - 1 != nbLignes)
                     {
                         if (blocActif[i, j] != 0)
                         {
                             toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[typePiece];
                         }
                     }
-                    else if (toutesImagesVisuelles[(ligneCourante + blocActif.GetLength(0) - 2), colonneCourante + j].Image == imagesBlocs[(int)TypeBloc.Gele])
+                }
+            }
+                GelerPiece();
+        }
+        //CDThibodeau
+
+        // CDThibodeau
+        void GelerPiece()
+        {
+            if (BlocPeutBouger(deplacement) == false)
+            {
+                for (int i = 0; i < blocActif.GetLength(0); i++)
+                {
+                    for (int j = 0; j < blocActif.GetLength(1); j++)
                     {
-                        if (blocActif[i, j] != 0)
+                        if (ligneCourante + blocActif.GetLength(0) - 1 < 20)
                         {
-                            blocActif[i, j] = (int)TypeBloc.Gele;
-                            toutesImagesVisuelles[(ligneCourante - 1) + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Gele];
+                            if (blocActif[blocActif.GetLength(0)-1, j] == (int)TypeBloc.Gele)
+                            {
+                                if (blocActif[i, j] != 0)
+                                {
+                                    blocActif[i, j] = (int)TypeBloc.Gele;
+                                    toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Gele];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (blocActif[i, j] != 0)
+                            {
+                                blocActif[i, j] = (int)TypeBloc.Gele;
+                                toutesImagesVisuelles[(ligneCourante - 1) + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Gele];
+                            }
                         }
                     }
                 }
-            }
-            if (BlocPeutBouger(deplacement) == false)
-            {
                 ligneCourante = 0;
                 colonneCourante = 4;
                 GenerationPiece();
