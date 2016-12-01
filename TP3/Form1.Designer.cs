@@ -56,7 +56,7 @@
             this.tableauJeu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableauJeu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableauJeu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableauJeu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 41F));
+            this.tableauJeu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 42F));
             this.tableauJeu.Location = new System.Drawing.Point(9, 9);
             this.tableauJeu.Margin = new System.Windows.Forms.Padding(0);
             this.tableauJeu.Name = "tableauJeu";
@@ -107,7 +107,7 @@
             // timerDescente
             // 
             this.timerDescente.Enabled = true;
-            this.timerDescente.Interval = 500;
+            this.timerDescente.Interval = 1000;
             this.timerDescente.Tick += new System.EventHandler(this.timerDescente_Tick);
             // 
             // TitrisForm

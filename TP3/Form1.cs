@@ -18,7 +18,7 @@ namespace TP3
         /// 
         /// </summary>
         int typePiece;
-                
+
         /// <summary>
         /// Images représentant un des blocs aléatoires, un bloc gelé ou un espace vide
         /// </summary>
@@ -137,10 +137,10 @@ namespace TP3
         public void GenerationPiece()
         {
             Random rnd = new Random();
-            int typePiece = rnd.Next(2, 9);
+            typePiece = rnd.Next(2, 9);
             if (typePiece == (int)TypeBloc.Carre) // Carré
             {
-                blocActif = new int[2, 2] { { 2, 2 }, { 2,2 } };
+                blocActif = new int[2, 2] { { 2, 2 }, { 2, 2 } };
             }
             else if (typePiece == (int)TypeBloc.Barre) // Barre
             {
@@ -175,7 +175,7 @@ namespace TP3
             {
                 blocActif = new int[2, 3] { { 8, 8, 0 }, { 0, 8, 8 } };
             }
-
+            AfficherJeu();
         }
         // CDThibodeau
 
@@ -200,7 +200,7 @@ namespace TP3
                             peutBouger = false;
                         }
                         else
-                        if (blocActif[i, j - 1] == 1)
+                        if (toutesImagesVisuelles[ligneCourante + i, colonneCourante - 1].Image == imagesBlocs[(int)TypeBloc.Gele])
                         {
                             if (blocActif[i, j] != 0)
                             {
@@ -220,9 +220,9 @@ namespace TP3
                         {
                             peutBouger = false;
                         }
-                        else if (blocActif[i, blocActif.GetLength(1)] == 1)
+                        else if (toutesImagesVisuelles[ligneCourante + i, colonneCourante + blocActif.GetLength(1)].Image == imagesBlocs[(int)TypeBloc.Gele])
                         {
-                            if (blocActif[i, blocActif.GetLength(1) - 1] == 1)
+                            if (blocActif[i, j] != 0)
                             {
                                 peutBouger = false;
                             }
@@ -236,22 +236,13 @@ namespace TP3
                 {
                     for (int j = 0; j < blocActif.GetLength(1); j++)
                     {
-                        if (ligneCourante + blocActif.GetLength(0) == nbLignes) // Si le bloc atteint le fond
+                        if ((ligneCourante + blocActif.GetLength(0) - 1) == nbLignes) // Si le bloc atteint le fond
                         {
                             peutBouger = false;
-                            ligneCourante = 0;
-                            colonneCourante = 4;
-                            GenerationPiece();
                         }
-                        else if (blocActif[blocActif.GetLength(0), j] == 1)
+                        else if (toutesImagesVisuelles[(ligneCourante + blocActif.GetLength(0) - 1), colonneCourante + j].Image == imagesBlocs[(int)TypeBloc.Gele])
                         {
-                            if (blocActif[blocActif.GetLength(0) - 1, j] == 1)
-                            {
-                                peutBouger = false;
-                                ligneCourante = 0;
-                                colonneCourante = 4;
-                                GenerationPiece();
-                            }
+                            peutBouger = false;
                         }
                     }
                 }
@@ -280,7 +271,7 @@ namespace TP3
         {
             AfficherJeu();
             int deplacement = e.KeyValue;
-            if (deplacement == 65)
+            if (deplacement == 65) // Déplacement gauche
             {
                 if (BlocPeutBouger(deplacement) == true)
                 {
@@ -288,14 +279,14 @@ namespace TP3
                     {
                         for (int j = 0; j < blocActif.GetLength(1); j++)
                         {
-                            blocActif[i, j] = 0;
-                            blocActif[i, j - 1] = typePiece;
+                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
                         }
                     }
+                    colonneCourante -= 1;
                 }
                 AfficherJeu();
             }
-            else if (deplacement == 68)
+            else if (deplacement == 68) // Déplacement droite
             {
                 if ((BlocPeutBouger(deplacement) == true))
                 {
@@ -305,15 +296,15 @@ namespace TP3
                         {
                             for (int j = 0; j < blocActif.GetLength(1); j++)
                             {
-                                blocActif[i, j] = 0;
-                                blocActif[i, j + 1] = typePiece;
+                                toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
                             }
                         }
+                        colonneCourante += 1;
                     }
                 }
                 AfficherJeu();
             }
-            else if (deplacement == 83)
+            else if (deplacement == 83) // Déplacement bas
             {
                 if (BlocPeutBouger(deplacement) == true)
                 {
@@ -321,8 +312,18 @@ namespace TP3
                     {
                         for (int j = 0; j < blocActif.GetLength(1); j++)
                         {
-                            blocActif[i, j] = 0;
-                            blocActif[i + 1, j] = typePiece;
+                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
+                        }
+                    }
+                    ligneCourante += 1;
+                }
+                else if (BlocPeutBouger(deplacement) == false)
+                {
+                    for (int i = 0; i < blocActif.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < blocActif.GetLength(1); j++)
+                        {
+                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Gele];
                         }
                     }
                 }
@@ -339,13 +340,19 @@ namespace TP3
         /// <param name="e"></param>
         private void timerDescente_Tick(object sender, EventArgs e)
         {
-            for (int i = 0; i < blocActif.GetLength(0); i++)
+            if (BlocPeutBouger(deplacement) == true)
             {
-                for (int j = 0; j < blocActif.GetLength(1); j++)
+                for (int i = 0; i < blocActif.GetLength(0); i++)
                 {
-                    blocActif[i, j] = 0;
-                    GenerationPiece();
+                    for (int j = 0; j < blocActif.GetLength(1); j++)
+                    {
+                        if (blocActif[i, j] != (int)TypeBloc.Aucun)
+                        {
+                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
+                        }
+                    }
                 }
+                ligneCourante += 1;
             }
             AfficherJeu();
         }
@@ -356,8 +363,28 @@ namespace TP3
             {
                 for (int j = 0; j < blocActif.GetLength(1); j++)
                 {
-                    toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)blocActif[i, j]];
+                    if ((ligneCourante + blocActif.GetLength(0) - 1) != 20)
+                    {
+                        if (blocActif[i, j] != 0)
+                        {
+                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[typePiece];
+                        }
+                    }
+                    else if (toutesImagesVisuelles[(ligneCourante + blocActif.GetLength(0) - 2), colonneCourante + j].Image == imagesBlocs[(int)TypeBloc.Gele])
+                    {
+                        if (blocActif[i, j] != 0)
+                        {
+                            blocActif[i, j] = (int)TypeBloc.Gele;
+                            toutesImagesVisuelles[(ligneCourante - 1) + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Gele];
+                        }
+                    }
                 }
+            }
+            if (BlocPeutBouger(deplacement) == false)
+            {
+                ligneCourante = 0;
+                colonneCourante = 4;
+                GenerationPiece();
             }
         }
         // CDThibodeau
