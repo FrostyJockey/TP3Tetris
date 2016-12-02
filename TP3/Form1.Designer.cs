@@ -124,7 +124,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Titris";
             this.Load += new System.EventHandler(this.frmLoad);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TitrisForm_KeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TitrisForm_KeyPress);
             this.ResumeLayout(false);
 
     }

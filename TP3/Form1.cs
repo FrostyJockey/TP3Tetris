@@ -193,62 +193,34 @@ namespace TP3
         /// <returns></returns>
         bool BlocPeutBouger(int deplacement)
         {
+            int offsetX = 0;
+            int offsetY = 0;
+            if(deplacement == 'a')
+            {
+                offsetX = -1;
+            }
+            else if (deplacement == 'd')
+            {
+                offsetX = 1;
+            }
+            else if (deplacement == 's')
+            {
+                offsetY=1;
+            }
             bool peutBouger = true;
-            if (deplacement == 65) // Si déplacement à gauche
+            for (int i = 0; i < blocActif.GetLength(0); i++)
             {
-                for (int i = 0; i < blocActif.GetLength(0); i++)
+                for (int j = 0; j < blocActif.GetLength(1); j++)
                 {
-                    for (int j = 0; j < blocActif.GetLength(1); j++)
+                    // Si reel bloc
+                  if(blocActif[i,j] != 0)
                     {
-                        if (colonneCourante == 0)
-                        {
-                            peutBouger = false;
-                        }
-                        else
-                        if (tableauJeuDonnees[ligneCourante+i, colonneCourante - 1] == (int)TypeBloc.Gele) // To fix, IMMEDIATELY
-                        {
-                            if (blocActif[i, j] != 0)
-                            {
-                                peutBouger = false;
-                            }
-                        }
-                    }
-                }
-            }
-            else if (deplacement == 68) // Si déplacement à droite
-            {
-                for (int i = 0; i < blocActif.GetLength(0); i++)
-                {
-                    for (int j = 0; j < blocActif.GetLength(1); j++)
-                    {
-                        if (colonneCourante + blocActif.GetLength(1) == nbColonnes)
-                        {
-                            peutBouger = false;
-                        }
-                        else if (tableauJeuDonnees[ligneCourante+i, colonneCourante+blocActif.GetLength(1)] == (int)TypeBloc.Gele)
-                        {
-                            if (blocActif[i, j] != 0)
-                            {
-                                peutBouger = false;
-                            }
-                        }
-                    }
-                }
-            }
-            else // Si déplacement vers le bas 
-            {
-                for (int i = 0; i < blocActif.GetLength(0); i++)
-                {
-                    for (int j = 0; j < blocActif.GetLength(1); j++)
-                    {
-                        if (ligneCourante + blocActif.GetLength(0)-1 == 20) // Si le bloc atteint le fond
-                        {
-                            peutBouger = false;
-                        }
-                        else if (tableauJeuDonnees[ligneCourante + blocActif.GetLength(0)-1, colonneCourante + j] == (int)TypeBloc.Gele) // To fix, IMMEDIATELY
-                        {
-                            peutBouger = false;
-                        }
+                        // Si dans les limites du tableau
+                        peutBouger = peutBouger && (colonneCourante + j + offsetX) < nbColonnes;
+                        peutBouger = peutBouger && (colonneCourante + j + offsetX) >= 0;
+                        peutBouger = peutBouger && (ligneCourante + i + offsetY) < nbLignes;
+                        // Si pas le prochain bloc gelé
+                        peutBouger = peutBouger && tableauJeuDonnees[ligneCourante + i + offsetY, colonneCourante + j + offsetX] != (int) TypeBloc.Gele;
                     }
                 }
             }
@@ -265,74 +237,6 @@ namespace TP3
             Application.Exit();
         }
         // CDThibodeau
-
-        // CDThibodeau
-        /// <summary>
-        /// Évènement bougeant le bloc en fonction de la touche appuyé.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TitrisForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            int deplacement = e.KeyValue;
-            if (deplacement == 65) // Déplacement gauche
-            {
-                if (BlocPeutBouger(deplacement) == true)
-                {
-                    for (int i = 0; i < blocActif.GetLength(0); i++)
-                    {
-                        for (int j = 0; j < blocActif.GetLength(1); j++)
-                        {
-                            if (blocActif[i, j] != (int)TypeBloc.Aucun)
-                            {
-                                tableauJeuDonnees[ligneCourante + i, colonneCourante + j] = (int)TypeBloc.Aucun;
-                                toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
-                            }
-                        }
-                    }
-                    colonneCourante -= 1;
-                }
-                AfficherJeu();
-            }
-            else if (deplacement == 68) // Déplacement droite
-            {
-                if ((BlocPeutBouger(deplacement) == true))
-                {
-                    for (int i = 0; i < blocActif.GetLength(0); i++)
-                    {
-                        for (int j = 0; j < blocActif.GetLength(1); j++)
-                        {
-                            if (blocActif[i, j] != (int)TypeBloc.Aucun)
-                            {
-                                tableauJeuDonnees[ligneCourante + i, colonneCourante + j] = (int)TypeBloc.Aucun;
-                                toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
-                            }
-                        }
-                    }
-                    colonneCourante += 1;
-                }
-                AfficherJeu();
-            }
-            else if (deplacement == 83) // Déplacement bas
-            {
-                if (BlocPeutBouger(deplacement) == true)
-                {
-                    for (int i = 0; i < blocActif.GetLength(0); i++)
-                    {
-                        for (int j = 0; j < blocActif.GetLength(1); j++)
-                        {
-                            if (blocActif[i, j] != (int)TypeBloc.Aucun)
-                            {
-                                tableauJeuDonnees[ligneCourante + i, colonneCourante + j] = (int)TypeBloc.Aucun;
-                                toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
-                            }
-                        }
-                    }
-                    ligneCourante += 1;
-                }
-                AfficherJeu();
-            }
-        }
         // CDThibodeau
 
         // CDThibodeau
@@ -343,28 +247,24 @@ namespace TP3
         /// <param name="e"></param>
         private void timerDescente_Tick(object sender, EventArgs e)
         {
-            if (BlocPeutBouger(deplacement) == true)
-            {
-                for (int i = 0; i < blocActif.GetLength(0); i++)
-                {
-                    for (int j = 0; j < blocActif.GetLength(1); j++)
-                    {
-                        if (blocActif[i, j] != (int)TypeBloc.Aucun)
-                        {
-                            tableauJeuDonnees[ligneCourante + i, colonneCourante + j] = (int)TypeBloc.Aucun;
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
-                        }
-                    }
-                }
-                ligneCourante += 1;
-            }
-            AfficherJeu();
+            BougerPiece('s');
         }
         // CDThibodeau
 
         // CDThibodeau
         void AfficherJeu()
         {
+            for (int i = 0; i < toutesImagesVisuelles.GetLength(0); i++)
+            {
+                for (int j = 0; j < toutesImagesVisuelles.GetLength(1); j++)
+                {
+                    if(tableauJeuDonnees[i,j]==(int)TypeBloc.Aucun)
+                        toutesImagesVisuelles[ i,  j].Image = imagesBlocs[(int)TypeBloc.Aucun];
+                    else
+                        toutesImagesVisuelles[i, j].Image = imagesBlocs[(int)TypeBloc.Gele];
+                }
+            }
+
             for (int i = 0; i < blocActif.GetLength(0); i++)
             {
                 for (int j = 0; j < blocActif.GetLength(1); j++)
@@ -373,52 +273,74 @@ namespace TP3
                     {
                         if (blocActif[i, j] != 0)
                         {
-                            tableauJeuDonnees[ligneCourante + i, colonneCourante + j] = blocActif[i, j];
                             toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[typePiece];
                         }
+                        
+                            
                     }
                 }
             }
-                GelerPiece();
+                
         }
         //CDThibodeau
 
         // CDThibodeau
         void GelerPiece()
         {
-            if (BlocPeutBouger(deplacement) == false)
+            if (BlocPeutBouger('s') == false)
             {
                 for (int i = 0; i < blocActif.GetLength(0); i++)
                 {
                     for (int j = 0; j < blocActif.GetLength(1); j++)
                     {
-                        if (ligneCourante + blocActif.GetLength(0) - 1 < 20)
+                        if (blocActif[i,j] !=0)
                         {
-                            if (toutesImagesVisuelles[ligneCourante+blocActif.GetLength(0)-1, colonneCourante+j].Image == imagesBlocs[(int)TypeBloc.Gele])
-                            {
-                                if (blocActif[i, j] != 0 && blocActif[i, j] != 1)
-                                {
-                                    blocActif[i, j] = (int)TypeBloc.Gele;
-                                    tableauJeuDonnees[ligneCourante + i, colonneCourante + j] = blocActif[i, j];
-                                    toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Gele];
-                                }
-                            }
+                            tableauJeuDonnees[ligneCourante + i, colonneCourante + j] = (int)TypeBloc.Gele;
                         }
-                        else
-                        {
-                            if (blocActif[i, j] != 0 && blocActif[i, j] != 1)
-                            {
-                                blocActif[i, j] = (int)TypeBloc.Gele;
-                                tableauJeuDonnees[(ligneCourante-1) + i, colonneCourante + j] = blocActif[i, j];
-                                toutesImagesVisuelles[(ligneCourante - 1) + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Gele];
-                            }
-                        }
+
                     }
                 }
+                // TODO
+                // Décaler les lignes
+
                 ligneCourante = 0;
                 colonneCourante = 4;
                 GenerationPiece();
             }
+        }
+
+        void BougerPiece(int deplacement)
+        {
+            int offsetX = 0;
+            int offsetY = 0;
+            if (deplacement == 'a')
+            {
+                offsetX = -1;
+            }
+            else if (deplacement == 'd')
+            {
+                offsetX = 1;
+            }
+            else if (deplacement == 's')
+            {
+                offsetY = 1;
+            }
+
+            if (BlocPeutBouger(deplacement) == true)
+            {
+                ligneCourante += offsetY;
+                colonneCourante += offsetX;
+                AfficherJeu();
+            }
+            else
+                GelerPiece();
+            
+        }
+
+        private void TitrisForm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            BougerPiece(e.KeyChar);
+            
         }
         // CDThibodeau
     }
