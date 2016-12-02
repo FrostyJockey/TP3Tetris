@@ -200,7 +200,7 @@ namespace TP3
                             peutBouger = false;
                         }
                         else
-                        if (blocActif[i, 0] == (int)TypeBloc.Gele)
+                        if (blocActif[i, 0] == (int)TypeBloc.Gele) // To fix, IMMEDIATELY
                         {
                             if (blocActif[i, j] != 0)
                             {
@@ -220,7 +220,7 @@ namespace TP3
                         {
                             peutBouger = false;
                         }
-                        else if (blocActif[i, blocActif.GetLength(1)-1] == (int)TypeBloc.Gele)
+                        else if (blocActif[i, blocActif.GetLength(1)-1] == (int)TypeBloc.Gele) // To fix, IMMEDIATELY
                         {
                             if (blocActif[i, j] != 0)
                             {
@@ -230,7 +230,7 @@ namespace TP3
                     }
                 }
             }
-            else // Si déplacement vers le bas
+            else // Si déplacement vers le bas 
             {
                 for (int i = 0; i < blocActif.GetLength(0); i++)
                 {
@@ -240,7 +240,7 @@ namespace TP3
                         {
                             peutBouger = false;
                         }
-                        else if (blocActif[blocActif.GetLength(0)-1, j] == (int)TypeBloc.Gele)
+                        else if (toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image == imagesBlocs[(int)TypeBloc.Gele]) // To fix, IMMEDIATELY
                         {
                             peutBouger = false;
                         }
@@ -274,14 +274,14 @@ namespace TP3
             {
                 if (BlocPeutBouger(deplacement) == true)
                 {
+                    colonneCourante -= 1;
                     for (int i = 0; i < blocActif.GetLength(0); i++)
                     {
                         for (int j = 0; j < blocActif.GetLength(1); j++)
                         {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
+                            toutesImagesVisuelles[ligneCourante + i, colonneCourante+1 + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
                         }
                     }
-                    colonneCourante -= 1;
                 }
                 AfficherJeu();
             }
@@ -289,14 +289,14 @@ namespace TP3
             {
                 if ((BlocPeutBouger(deplacement) == true))
                 {
-                        for (int i = 0; i < blocActif.GetLength(0); i++)
+                    colonneCourante += 1;
+                    for (int i = 0; i < blocActif.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < blocActif.GetLength(1); j++)
                         {
-                            for (int j = 0; j < blocActif.GetLength(1); j++)
-                            {
-                                toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
-                            }
+                            toutesImagesVisuelles[ligneCourante + i, colonneCourante-1 + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
                         }
-                        colonneCourante += 1;
+                    }
                 }
                 AfficherJeu();
             }
@@ -304,14 +304,14 @@ namespace TP3
             {
                 if (BlocPeutBouger(deplacement) == true)
                 {
+                    ligneCourante += 1;
                     for (int i = 0; i < blocActif.GetLength(0); i++)
                     {
                         for (int j = 0; j < blocActif.GetLength(1); j++)
                         {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
+                            toutesImagesVisuelles[ligneCourante-1 + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
                         }
                     }
-                    ligneCourante += 1;
                 }
                 AfficherJeu();
             }
@@ -328,17 +328,17 @@ namespace TP3
         {
             if (BlocPeutBouger(deplacement) == true)
             {
+                ligneCourante += 1;
                 for (int i = 0; i < blocActif.GetLength(0); i++)
                 {
                     for (int j = 0; j < blocActif.GetLength(1); j++)
                     {
                         if (blocActif[i, j] != (int)TypeBloc.Aucun)
                         {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
+                            toutesImagesVisuelles[ligneCourante-1 + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Aucun];
                         }
                     }
                 }
-                ligneCourante += 1;
             }
             AfficherJeu();
         }
@@ -377,7 +377,7 @@ namespace TP3
                         {
                             if (blocActif[blocActif.GetLength(0)-1, j] == (int)TypeBloc.Gele)
                             {
-                                if (blocActif[i, j] != 0)
+                                if (blocActif[i, j] != 0 && blocActif[i, j] != 1)
                                 {
                                     blocActif[i, j] = (int)TypeBloc.Gele;
                                     toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Gele];
@@ -386,7 +386,7 @@ namespace TP3
                         }
                         else
                         {
-                            if (blocActif[i, j] != 0)
+                            if (blocActif[i, j] != 0 && blocActif[i, j] != 1)
                             {
                                 blocActif[i, j] = (int)TypeBloc.Gele;
                                 toutesImagesVisuelles[(ligneCourante - 1) + i, colonneCourante + j].Image = imagesBlocs[(int)TypeBloc.Gele];
