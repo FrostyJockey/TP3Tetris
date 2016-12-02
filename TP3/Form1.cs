@@ -15,6 +15,11 @@ namespace TP3
         #region Valeurs Partagées
 
         /// <summary>
+        /// Nombre de lignes retirées durant la partie.
+        /// </summary>
+        int pointage;
+
+        /// <summary>
         /// Numéro de la pièce (pour l'affichage)
         /// </summary>
         int typePiece;
@@ -55,8 +60,11 @@ namespace TP3
         /// </summary>
         int deplacement;
 
-
+        /// <summary>
+        /// Tableau de vérification de données (Exemple si le jeu peut retirer une ligne pleine (vérifie si la ligne contient des 1, ce qui équivaut aux blocs gelés))
+        /// </summary>
         int[,] tableauJeuDonnees;
+
         #endregion
         // CDThibodeau
 
@@ -134,6 +142,8 @@ namespace TP3
 
             // Clean-up
         }
+
+        #endregion
 
         // CDThibodeau
         /// <summary>
@@ -228,10 +238,12 @@ namespace TP3
         }
         // CDThibodeau
 
-
-        #endregion
-
         // CDThibodeau
+        /// <summary>
+        /// Quitte le jeu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonQuitterPartie_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -252,6 +264,7 @@ namespace TP3
         // CDThibodeau
 
         // CDThibodeau
+        ///
         void AfficherJeu()
         {
             for (int i = 0; i < toutesImagesVisuelles.GetLength(0); i++)
@@ -285,6 +298,9 @@ namespace TP3
         //CDThibodeau
 
         // CDThibodeau
+        /// <summary>
+        /// 
+        /// </summary>
         void GelerPiece()
         {
             if (BlocPeutBouger('s') == false)
@@ -300,15 +316,19 @@ namespace TP3
 
                     }
                 }
-                // TODO
-                // Décaler les lignes
 
+                pointage = DecalerLignes();
+                labelPointage.Text = pointage.ToString();
                 ligneCourante = 0;
                 colonneCourante = 4;
                 GenerationPiece();
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deplacement"></param>
         void BougerPiece(int deplacement)
         {
             int offsetX = 0;
@@ -337,10 +357,65 @@ namespace TP3
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TitrisForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             BougerPiece(e.KeyChar);
-            
+        }
+
+        /// <summary>
+        /// Fonction qui décale les lignes si le jeu contient une ligne pleine.
+        /// </summary>
+        /// <returns>Retourne le nombre de lignes pleines retirée si le jeu doit en retirer.</returns>
+        int DecalerLignes()
+        {
+            int[] ligneAVerifier = new int[tableauJeuDonnees.GetLength(1)];
+            int nbLignesRetires = 0;
+            bool decalageEstPossible;
+            for (int i = 0; i < tableauJeuDonnees.GetLength(0); i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++)
+                {
+                    ligneAVerifier[j] = tableauJeuDonnees[(tableauJeuDonnees.GetLength(0)-1) - i, j];
+                }
+                decalageEstPossible = VerifierLignesPleines(ligneAVerifier);
+                if (decalageEstPossible == true)
+                {
+                    for (int iDecalage = 0; iDecalage < (tableauJeuDonnees.GetLength(0)-1); iDecalage++)
+                    {
+                        for (int jDecalage = 0; jDecalage < tableauJeuDonnees.GetLength(1); jDecalage++)
+                        {
+                            toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1) - iDecalage, jDecalage].Image = imagesBlocs[(int)TypeBloc.Aucun];
+                            toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1) - iDecalage, jDecalage].Image = toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 2) - iDecalage, jDecalage].Image;
+                            tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 1) - iDecalage, jDecalage] = tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 2) - iDecalage, jDecalage];
+                            nbLignesRetires++;
+                        }
+                    }
+                }
+            }
+            return nbLignesRetires;
+        }
+
+        /// <summary>
+        /// Fonction vérifiant s'il y a une ligne pleine à la ligne "ligneAVerifier" dans le tableau "tableauJeuDonnees".
+        /// </summary>
+        /// <param name="ligneAVerifier"> tableau d'entiers, Numéro de la ligne à vérifier.</param>
+        /// <returns>Retourne un booléen: true = La ligne est pleine | false = La ligne n'est pas pleine.</returns>
+        bool VerifierLignesPleines(int[] ligneAVerifier)
+        {
+            bool decalageEstPossible = true;
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++)
+            {
+                if (ligneAVerifier[j] != (int)TypeBloc.Gele)
+                {
+                    decalageEstPossible = false;
+                }
+            }
+            return decalageEstPossible;
         }
         // CDThibodeau
     }
