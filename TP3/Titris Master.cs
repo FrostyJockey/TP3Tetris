@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using WMPLib;
 
 namespace TP3
 {
@@ -11,8 +12,32 @@ namespace TP3
             InitializeComponent();
         }
 
-        // CDThibodeau
         #region Valeurs Partagées
+
+        /// <summary>
+        /// Variable jouant un son lorsqu'une ligne se fait retirer
+        /// </summary>
+        WindowsMediaPlayer soundEffectsLigneRetrait = new WindowsMediaPlayer();
+
+        /// <summary>
+        /// Variable jouant un son lorsque la pièce se gèle.
+        /// </summary>
+        WindowsMediaPlayer soundEffectsGeler = new WindowsMediaPlayer();
+
+        /// <summary>
+        /// Variable s'occupant des effets sonores
+        /// </summary>
+        WindowsMediaPlayer soundEffectsBouger = new WindowsMediaPlayer();
+
+        /// <summary>
+        /// Variable s'occupant de la musique
+        /// </summary>
+        WindowsMediaPlayer musiqueJeu = new WindowsMediaPlayer();
+
+        /// <summary>
+        /// Valeur définissant si le son est arrêté ou non. (0 = Son peut être entendu | 1 = Son ne peut être entendu)
+        /// </summary>
+        int sonActifOuNon;
 
         /// <summary>
         /// Nombre de lignes retirées durant la partie.
@@ -66,7 +91,6 @@ namespace TP3
         int[,] tableauJeuDonnees;
 
         #endregion
-        // CDThibodeau
 
         #region Code fourni
 
@@ -84,6 +108,10 @@ namespace TP3
             // Ne pas oublier de mettre en place les valeurs nécessaires à une partie.
             ExecuterTestsUnitaires();
             InitialiserSurfaceDeJeu(nbLignes, nbColonnes);
+            soundEffectsBouger.URL = 
+            soundEffectsGeler.URL = 
+            soundEffectsLigneRetrait.URL = 
+            musiqueJeu.URL = ""
             GenerationPiece();
         }
 
@@ -351,6 +379,7 @@ namespace TP3
                 ligneCourante += offsetY;
                 colonneCourante += offsetX;
                 AfficherJeu();
+                soundEffectsBouger.controls.play();
             }
             else
                 GelerPiece();
@@ -421,5 +450,27 @@ namespace TP3
             return decalageEstPossible;
         }
         // CDThibodeau
+
+
+        // CDThibodeau
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            timerDescente.Stop();
+            Options optionMenu = new Options();
+            DialogResult optionClicBouton = optionMenu.ShowDialog();
+            if (optionClicBouton == DialogResult.Cancel)
+            {
+                optionMenu.Close();
+            }
+        }
+        // CDThibodeau
+
+        public void AppliquerOptions(int colonnesChoix, int lignesChoix, int sonCocheOuPas)
+        {
+            sonActifOuNon = sonCocheOuPas;
+            timerDescente.Start();
+            nbColonnes = colonnesChoix;
+            nbLignes = lignesChoix;
+        }
     }
 }

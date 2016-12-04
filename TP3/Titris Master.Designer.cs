@@ -35,7 +35,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.labelPointage = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.redémarrerJeuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableauJeu
@@ -61,7 +65,7 @@
             this.tableauJeu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableauJeu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableauJeu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 42F));
-            this.tableauJeu.Location = new System.Drawing.Point(9, 9);
+            this.tableauJeu.Location = new System.Drawing.Point(9, 27);
             this.tableauJeu.Margin = new System.Windows.Forms.Padding(0);
             this.tableauJeu.Name = "tableauJeu";
             this.tableauJeu.RowCount = 30;
@@ -148,6 +152,30 @@
             this.labelPointage.Size = new System.Drawing.Size(0, 20);
             this.labelPointage.TabIndex = 4;
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.optionsToolStripMenuItem,
+            this.redémarrerJeuToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(578, 24);
+            this.menuStrip1.TabIndex = 5;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.optionsToolStripMenuItem.Text = "Options";
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+            // 
+            // redémarrerJeuToolStripMenuItem
+            // 
+            this.redémarrerJeuToolStripMenuItem.Name = "redémarrerJeuToolStripMenuItem";
+            this.redémarrerJeuToolStripMenuItem.Size = new System.Drawing.Size(99, 20);
+            this.redémarrerJeuToolStripMenuItem.Text = "Redémarrer jeu";
+            // 
             // TitrisForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -157,8 +185,10 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.buttonQuitterPartie);
             this.Controls.Add(this.tableauJeu);
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "TitrisForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Titris Master";
@@ -166,7 +196,10 @@
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TitrisForm_KeyPress);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
     }
 
@@ -178,6 +211,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label labelPointage;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem redémarrerJeuToolStripMenuItem;
     }
 }
 
