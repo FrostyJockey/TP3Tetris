@@ -141,6 +141,7 @@ namespace TP3
                     newPictureBox.BackColor = Color.Black;
                     newPictureBox.Margin = new Padding(0, 0, 0, 0);
                     newPictureBox.BorderStyle = BorderStyle.FixedSingle;
+                    newPictureBox.BackgroundImageLayout = ImageLayout.Stretch;
                     newPictureBox.Dock = DockStyle.Fill;
 
                     // Assignation de la représentation visuelle.
@@ -307,11 +308,11 @@ namespace TP3
                 {
                     if (tableauJeuDonnees[i, j] == (int)TypeBloc.Aucun)
                     {
-                        toutesImagesVisuelles[i, j].Image = imagesBlocs[(int)TypeBloc.Aucun];
+                        toutesImagesVisuelles[i, j].BackgroundImage = imagesBlocs[(int)TypeBloc.Aucun];
                     }
                     else
                     {
-                        toutesImagesVisuelles[i, j].Image = imagesBlocs[(int)TypeBloc.Gele];
+                        toutesImagesVisuelles[i, j].BackgroundImage = imagesBlocs[(int)TypeBloc.Gele];
                     }
                 }
             }
@@ -324,7 +325,7 @@ namespace TP3
                     {
                         if (blocActif[i, j] != 0)
                         {
-                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].Image = imagesBlocs[typePiece];
+                            toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].BackgroundImage = imagesBlocs[typePiece];
                         }
                         
                             
@@ -444,8 +445,8 @@ namespace TP3
                     {
                         for (int jDecalage = 0; jDecalage < tableauJeuDonnees.GetLength(1); jDecalage++)
                         {
-                            toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage].Image = imagesBlocs[(int)TypeBloc.Aucun];
-                            toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage].Image = toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 2 - ligneADecaler) - iDecalage, jDecalage].Image;
+                            toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage].BackgroundImage = imagesBlocs[(int)TypeBloc.Aucun];
+                            toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage].BackgroundImage = toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 2 - ligneADecaler) - iDecalage, jDecalage].BackgroundImage;
                             tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage] = tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 2 - ligneADecaler) - iDecalage, jDecalage];
                         }
                     }
