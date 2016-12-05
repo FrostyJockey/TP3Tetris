@@ -58,15 +58,33 @@ namespace TP3
             trackBarLignes.Value = barreLignes;
         }
 
+
+        /// <summary>
+        /// Au clic, appel la fonction appliquant les options.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonConfirmer_Click(object sender, EventArgs e)
         {
             ApplicationChoix();
         }
 
+
+        /// <summary>
+        /// Applique le choix des options.
+        /// </summary>
         public void ApplicationChoix()
         {
             int colonnesChoix = Decimal.ToInt32(trackBarColonnes.Value);
             int lignesChoix = Decimal.ToInt32(trackBarLignes.Value);
+            if (colonnesChoix != barreColonnes || lignesChoix != barreLignes)
+            {
+                DialogResult reponse = MessageBox.Show("Pour appliquer la partie, le jeu devera être redémarré. Souhaitez-vous continuer?", "Attention!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (reponse == DialogResult.Yes)
+                {
+                    /*TitrisForm titrisJeuActif = new TitrisForm();*/ // Will modify later
+                }
+            }
             titrisJeuActif.AppliquerOptions(colonnesChoix, lignesChoix, sonCocheOuPas, musiqueCocheOuPas);
             this.Close();
         }
@@ -76,6 +94,11 @@ namespace TP3
             this.Close();
         }
 
+        /// <summary>
+        /// Fonction indiquant si le son devrait arrêter ou non.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkBoxSon_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxSon.CheckState == CheckState.Checked)
@@ -88,6 +111,11 @@ namespace TP3
             }
         }
 
+        /// <summary>
+        /// Fonction indiquant si la musique devrait arrêter ou non.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkBoxMusique_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxMusique.CheckState == CheckState.Checked)
@@ -100,15 +128,23 @@ namespace TP3
             }
         }
 
+        /// <summary>
+        /// Fonction modifiant le text affichant le nombre de colonnes que l'utilisateur s'apprête à choisir.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void trackBarColonnes_Scroll(object sender, EventArgs e)
         {
-            barreColonnes = trackBarColonnes.Value;
             textBoxColonnes.Text = (trackBarColonnes.Value).ToString();
         }
 
+        /// <summary>
+        /// Fonction modifiant le text affichant le nombre de lignes que l'utilisateur s'apprête à choisir.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void trackBarLignes_Scroll(object sender, EventArgs e)
         {
-            barreLignes = trackBarLignes.Value;
             textBoxLignes.Text = (trackBarLignes.Value).ToString();
         }
     }

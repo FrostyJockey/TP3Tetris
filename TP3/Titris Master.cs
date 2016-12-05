@@ -492,14 +492,11 @@ namespace TP3
             timerDescente.Stop();
             optionMenu.InitialiserOptions(nbColonnes, nbLignes);
             DialogResult optionClicBouton = optionMenu.ShowDialog();
-            if (optionClicBouton == DialogResult.Cancel)
+            optionMenu.Close();
+            timerDescente.Start();
+            if (musiqueActifOuNon == 0)
             {
-                optionMenu.Close();
-                timerDescente.Start();
-                if (musiqueActifOuNon == 0)
-                {
-                    musiqueJeu.controls.play();
-                }
+                musiqueJeu.controls.play();
             }
         }
         // CDThibodeau
