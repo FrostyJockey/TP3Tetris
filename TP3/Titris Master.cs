@@ -492,7 +492,6 @@ namespace TP3
             timerDescente.Stop();
             optionMenu.InitialiserOptions(nbColonnes, nbLignes);
             DialogResult optionClicBouton = optionMenu.ShowDialog();
-            optionMenu.Close();
             timerDescente.Start();
             if (musiqueActifOuNon == 0)
             {
