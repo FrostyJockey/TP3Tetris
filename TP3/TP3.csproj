@@ -93,28 +93,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\barreBloc.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\carreBloc.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\freeze.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\rien.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\TBloc.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\LBloc.gif" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\JBloc.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\SBloc.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ZBloc.png" />
@@ -131,6 +110,13 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\TBloc.png" />
+    <None Include="Resources\barreBloc.png" />
+    <None Include="Resources\carreBloc.png" />
+    <None Include="Resources\freeze.png" />
+    <None Include="Resources\LBloc.png" />
+    <None Include="Resources\rien.png" />
+    <None Include="Resources\SBloc.png" />
     <Content Include="Resources\SonetMusique\blocGele.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
