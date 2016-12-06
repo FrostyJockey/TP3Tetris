@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WMPLib;
@@ -112,10 +113,10 @@ namespace TP3
         private void frmLoad(object sender, EventArgs e)
         {
             // Ne pas oublier de mettre en place les valeurs nécessaires à une partie.
-            ExecuterTestsUnitaires();
             InitialiserSurfaceDeJeu(nbLignes, nbColonnes);
             colonneCourante = nbColonnes / 2 - 1;
             labelPointage.Text = "0";
+            ExecuterTestsUnitaires();
             GenerationPiece();
         }
 
@@ -156,24 +157,201 @@ namespace TP3
 
         #region Code à développer
         /// <summary>
-        /// Faites ici les appels requis pour vos tests unitaires.
+        /// Appel des tests unitaires.
         /// </summary>
         void ExecuterTestsUnitaires()
         {
-            ExecuterTestABC();
-            // A compléter...
+            // CDThibodeau
+            TestLigneSeule();
+            TestLigneSeuleRetrait();
+            TestLignesDoublesConsécutives();
+            TestLignesDoublesNonConsécutives();
+            TestTroisLignesConsécutives();
+            TestQuatreLignesConsécutives();
+            // CDThibodeau
         }
 
-        // A renommer et commenter!
-        void ExecuterTestABC()
+        /// <summary>
+        /// Test unitaire sur le retrait d'une ligne pleine
+        /// </summary>
+        void TestLigneSeule()
         {
-            // Mise en place des données du test
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la ligne pleine.
+            {
+                tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1, j] = 1;
+            }
+            DecalerLignes();
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Vérification qu'il n'y a rien.
+            {
+                Debug.Assert(tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1, j] == (int)TypeBloc.Aucun, "Erreur dans le retrait de ligne");
+            }
+            for (int i = 0; i < tableauJeuDonnees.GetLength(0); i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Nettoyage même si non nécessaire.
+                {
+                    tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] = 0;
+                }
+            }
+        }
 
-            // Exécuter de la méthode à tester
+        /// <summary>
+        /// Test unitaire sur le retrait et le décalage avec une ligne pleine
+        /// </summary>
+        void TestLigneSeuleRetrait()
+        {
+            int[] ligneNonPleine = new int[10] { 1, 0, 0, 0, 1, 1, 0, 1, 0, 1 };
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la ligne pleine.
+            {
+                tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1, j] = 1;
+            }
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la ligne non pleine.
+            {
+                tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 2, j] = ligneNonPleine[j];
+            }
+            DecalerLignes();
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Vérification que la ligne du dessus a bien décalée.
+            {
+                Debug.Assert(tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1, j] == ligneNonPleine[j],  "Erreur dans le décalage de la ligne seule [ligne seule retrait]");
+            }
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Vérification qu'il n'y a rien au dessus.
+            {
+                Debug.Assert(tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 2, j] == (int)TypeBloc.Aucun, "Erreur dans le retrait de la ligne pleine [ligne seule retrait]");
+            }
+            for (int i = 0; i < tableauJeuDonnees.GetLength(0); i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Nettoyage même si non nécessaire.
+                {
+                    tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] = 0;
+                }
+            }
+        }
 
-            // Validation des résultats
+        /// <summary>
+        /// Test unitaire sur le retrait de deux lignes consécutives.
+        /// </summary>
+        void TestLignesDoublesConsécutives()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation des lignes pleines.
+                {
+                    tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] = 1;
+                }
+            }
+            DecalerLignes();
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // S'assurer qu'il n'y a bien rien.
+                {
+                    Debug.Assert(tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] == (int)TypeBloc.Aucun, "Erreur dans le retrait des deux lignes");
+                }
+            }
+            for (int i = 0; i < tableauJeuDonnees.GetLength(0); i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Nettoyage même si non nécessaire.
+                {
+                    tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] = 0;
+                }
+            }
+        }
 
-            // Clean-up
+        /// <summary>
+        /// Test unitaire sur l'effacement de deux lignes non consécutives.
+        /// </summary>
+        void TestLignesDoublesNonConsécutives()
+        {
+            int[] ligneAEffacerPleine = new int[10] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+            int[] ligneNonPleine = new int[10] { 1, 0, 0, 0, 1, 1, 0, 1, 0, 1 };
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la première ligne pleine.
+            {
+                tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1, j] = ligneAEffacerPleine[j];
+            }
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la ligne non pleine.
+            {
+                tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 2, j] = ligneNonPleine[j];
+            }
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la deuxième ligne pleine.
+            {
+                tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 3, j] = ligneAEffacerPleine[j];
+            }
+            DecalerLignes();
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // S'assurer que la ligne décalé est bien au fond.
+            {
+                Debug.Assert(tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1, j] == ligneNonPleine[j], "Erreur dans le décalage");
+            }
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // S'assurer qu'il n'y a bien rien au dessus de la ligne avec des blocs.
+            {
+                Debug.Assert(tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 2, j] == (int)TypeBloc.Aucun, "Erreur dans le décalage");
+            }
+            for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // S'assurer qu'il n'y a bien rien au dessus de la ligne avec des blocs.
+            {
+                Debug.Assert(tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 3, j] == (int)TypeBloc.Aucun, "Erreur dans le décalage");
+            }
+            for (int i = 0; i < tableauJeuDonnees.GetLength(0); i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Nettoyage même si non nécessaire.
+                {
+                    tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] = 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Test unitaire sur le retrait de trois lignes consécutives.
+        /// </summary>
+        void TestTroisLignesConsécutives()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation des lignes pleines.
+                {
+                    tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] = 1;
+                }
+            }
+            DecalerLignes();
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // S'assurer qu'il n'y a bien rien.
+                {
+                    Debug.Assert(tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] == (int)TypeBloc.Aucun, "Erreur dans le décalage");
+                }
+            }
+            for (int i = 0; i < tableauJeuDonnees.GetLength(0); i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Nettoyage même si non nécessaire.
+                {
+                    tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] = 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Test unitaire sur le retrait de quatre lignes consécutives.
+        /// </summary>
+        void TestQuatreLignesConsécutives()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation des lignes pleines.
+                {
+                    tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] = 1;
+                }
+            }
+            DecalerLignes();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // S'assurer qu'il n'y a bien rien.
+                {
+                    Debug.Assert(tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] == (int)TypeBloc.Aucun, "Erreur dans le décalage");
+                }
+            }
+            for (int i = 0; i < tableauJeuDonnees.GetLength(0); i++)
+            {
+                for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Nettoyage même si non nécessaire.
+                {
+                    tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1 - i, j] = 0;
+                }
+            }
         }
 
         #endregion
@@ -445,11 +623,11 @@ namespace TP3
                         soundEffectsLigneRetrait.controls.play();
                     }
                     ligneADecaler = i;
-                    for (int iDecalage = 0; iDecalage < (tableauJeuDonnees.GetLength(0)-1 - ligneADecaler); iDecalage++)
+                    RetirerLigne(ligneADecaler);
+                    for (int iDecalage = 0; iDecalage < (tableauJeuDonnees.GetLength(0) - 1 - ligneADecaler); iDecalage++)
                     {
                         for (int jDecalage = 0; jDecalage < tableauJeuDonnees.GetLength(1); jDecalage++)
                         {
-                            toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage].BackgroundImage = imagesBlocs[(int)TypeBloc.Aucun];
                             toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage].BackgroundImage = toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 2 - ligneADecaler) - iDecalage, jDecalage].BackgroundImage;
                             tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage] = tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 2 - ligneADecaler) - iDecalage, jDecalage];
                         }
@@ -481,6 +659,17 @@ namespace TP3
             return decalageEstPossible;
         }
         // CDThibodeau
+
+        // CDThibodeau
+
+        void RetirerLigne(int ligneADecaler)
+        {
+            for (int jDecalage = 0; jDecalage < tableauJeuDonnees.GetLength(1); jDecalage++)
+            {
+                toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler), jDecalage].BackgroundImage = imagesBlocs[(int)TypeBloc.Aucun];
+                tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 1 - ligneADecaler), jDecalage] = (int)TypeBloc.Aucun;
+            }
+        }
 
 
         // CDThibodeau
