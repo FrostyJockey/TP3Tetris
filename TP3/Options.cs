@@ -49,7 +49,11 @@ namespace TP3
             titrisJeuActif = formulaireActif;
         }
 
-
+        /// <summary>
+        /// Initiallise les barres pour qu'ils soient sur le nombre de colonnes et de lignes.
+        /// </summary>
+        /// <param name="nbColonnes">Nombre de colonnes courant</param>
+        /// <param name="nbLignes">Nombre de lignes courant</param>
         public void InitialiserOptions(int nbColonnes, int nbLignes)
         {
             barreColonnes = nbColonnes;
@@ -82,10 +86,11 @@ namespace TP3
                 DialogResult reponse = MessageBox.Show("Pour appliquer la partie, le jeu devera être redémarré. Souhaitez-vous continuer?", "Attention!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (reponse == DialogResult.Yes)
                 {
-                    /*TitrisForm titrisJeuActif = new TitrisForm();*/ // Will modify later
+                    titrisJeuActif.RedemarrageJeuOptions(colonnesChoix, lignesChoix);
+                    this.Close();
                 }
             }
-            titrisJeuActif.AppliquerOptions(colonnesChoix, lignesChoix, sonCocheOuPas, musiqueCocheOuPas);
+            titrisJeuActif.AppliquerOptions(sonCocheOuPas, musiqueCocheOuPas);
             this.Close();
         }
 

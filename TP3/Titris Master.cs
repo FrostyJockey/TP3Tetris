@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Threading;
 using WMPLib;
 
 namespace TP3
@@ -17,9 +18,16 @@ namespace TP3
             soundEffectsGeler.controls.stop();
             soundEffectsLigneRetrait.URL = "Resources/SonetMusique/ligneComplete.mp3";
             soundEffectsLigneRetrait.controls.stop();
+            soundEffectFinPartie.URL = "Resources/SonetMusique/GameOverMusic.mp3";
+            soundEffectFinPartie.controls.stop();
         }
 
         #region Valeurs Partagées
+
+        /// <summary>
+        ///  Son qui joue lorsqu'une partie est terminée.
+        /// </summary>
+        WindowsMediaPlayer soundEffectFinPartie = new WindowsMediaPlayer();
 
         /// <summary>
         /// Variable jouant un son lorsqu'une ligne se fait retirer
@@ -69,12 +77,12 @@ namespace TP3
         /// <summary>
         /// Ligne où se situe le coin en haut à gauche du tableau blocActif.
         /// </summary>
-        int ligneCourante = 0;
+        int ligneCourante;
 
         /// <summary>
         /// Colonne où se situe le coin en haut à gauche du tableau blocActif.
         /// </summary>
-        int colonneCourante = 4;
+        int colonneCourante;
 
         /// <summary>
         /// Nombre de colonnes dans le jeu.
@@ -97,9 +105,24 @@ namespace TP3
         /// </summary>
         int[,] tableauJeuDonnees;
 
+        /// <summary>
+        /// Tableau qui va stocker le nombre de pièces de chaque type de pièces générées.
+        /// </summary>
+        int[] tableauStatistiquesPieces = new int[7];
+
+        /// <summary>
+        /// Nouveau nombre de colonnes sélectionné dans le formulaire d'option.
+        /// </summary>
+        int choixColonnes;
+
+        /// <summary>
+        /// Nouveau nombre de lignes sélectionné dans le formulaire d'option.
+        /// </summary>
+        int choixLignes;
+
         #endregion
 
-        #region Code fourni
+        #region Code fourni (avec modifications)
 
         // Représentation visuelles du jeu en mémoire.
         PictureBox[,] toutesImagesVisuelles = null;
@@ -155,7 +178,7 @@ namespace TP3
         } // Ajout du tableau "tableauJeuDonnees" pour l'initialiser
         #endregion
 
-        #region Code à développer
+        #region Tests unitaires
         /// <summary>
         /// Appel des tests unitaires.
         /// </summary>
@@ -199,13 +222,15 @@ namespace TP3
         /// </summary>
         void TestLigneSeuleRetrait()
         {
-            int[] ligneNonPleine = new int[10] { 1, 0, 0, 0, 1, 1, 0, 1, 0, 1 };
+            Random rndBlocs = new Random();
+            int[] ligneNonPleine = new int[tableauJeuDonnees.GetLength(1)];
             for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la ligne pleine.
             {
                 tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1, j] = 1;
             }
             for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la ligne non pleine.
             {
+                ligneNonPleine[j] = rndBlocs.Next(0, 2);
                 tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 2, j] = ligneNonPleine[j];
             }
             DecalerLignes();
@@ -260,19 +285,20 @@ namespace TP3
         /// </summary>
         void TestLignesDoublesNonConsécutives()
         {
-            int[] ligneAEffacerPleine = new int[10] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-            int[] ligneNonPleine = new int[10] { 1, 0, 0, 0, 1, 1, 0, 1, 0, 1 };
+            Random rndBlocs = new Random();
+            int[] ligneNonPleine = new int[tableauJeuDonnees.GetLength(1)];
             for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la première ligne pleine.
             {
-                tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1, j] = ligneAEffacerPleine[j];
+                tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 1, j] = 1;
             }
             for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la ligne non pleine.
             {
+                ligneNonPleine[j] = rndBlocs.Next(0, 2);
                 tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 2, j] = ligneNonPleine[j];
             }
             for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // Initiallisation de la deuxième ligne pleine.
             {
-                tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 3, j] = ligneAEffacerPleine[j];
+                tableauJeuDonnees[tableauJeuDonnees.GetLength(0) - 3, j] = 1;
             }
             DecalerLignes();
             for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++) // S'assurer que la ligne décalé est bien au fond.
@@ -362,46 +388,48 @@ namespace TP3
         /// </summary>
         public void GenerationPiece()
         {
-            Random rnd = new Random();
-            typePiece = rnd.Next(2, 9);
-            if (typePiece == (int)TypeBloc.Carre) // Carré
-            {
-                blocActif = new int[2, 2] { { 2, 2 }, { 2, 2 } };
-            }
-            else if (typePiece == (int)TypeBloc.Barre) // Barre
-            {
-                Random rndSens = new Random();
-                int sens = rndSens.Next(0, 2);
-                if (sens == 0)
+                Random rnd = new Random();
+                typePiece = rnd.Next(2, 9);
+                if (typePiece == (int)TypeBloc.Carre) // Carré
                 {
-                    blocActif = new int[4, 1] { { 3 }, { 3 }, { 3 }, { 3 } };
+                    blocActif = new int[2, 2] { { 2, 2 }, { 2, 2 } };
                 }
-                else
+                else if (typePiece == (int)TypeBloc.Barre) // Barre
                 {
-                    blocActif = new int[1, 4] { { 3, 3, 3, 3 } };
+                    {
+                        blocActif = new int[4, 1] { { 3 }, { 3 }, { 3 }, { 3 } };
+                    }
                 }
-            }
-            else if (typePiece == (int)TypeBloc.T) // Bloc T
+                else if (typePiece == (int)TypeBloc.T) // Bloc T
+                {
+                    blocActif = new int[2, 3] { { 0, 4, 0 }, { 4, 4, 4 } };
+                }
+                else if (typePiece == (int)TypeBloc.L) // Bloc L
+                {
+                    blocActif = new int[3, 2] { { 5, 0 }, { 5, 0 }, { 5, 5 } };
+                }
+                else if (typePiece == (int)TypeBloc.J) // Bloc J
+                {
+                    blocActif = new int[3, 2] { { 0, 6 }, { 0, 6 }, { 6, 6 } };
+                }
+                else if (typePiece == (int)TypeBloc.S) // Bloc S
+                {
+                    blocActif = new int[2, 3] { { 0, 7, 7 }, { 7, 7, 0 } };
+                }
+                else if (typePiece == (int)TypeBloc.Z) // Bloc Z
+                {
+                    blocActif = new int[2, 3] { { 8, 8, 0 }, { 0, 8, 8 } };
+                }
+                tableauStatistiquesPieces[typePiece - 2] += 1;
+            if (BlocPeutBouger('s') == true)
             {
-                blocActif = new int[2, 3] { { 0, 4, 0 }, { 4, 4, 4 } };
+                AfficherJeu();
             }
-            else if (typePiece == (int)TypeBloc.L) // Bloc L
+            else
             {
-                blocActif = new int[3, 2] { { 5, 0 }, { 5, 0 }, { 5, 5 } };
+                AfficherJeu();
+                FinirPartie();
             }
-            else if (typePiece == (int)TypeBloc.J) // Bloc J
-            {
-                blocActif = new int[3, 2] { { 0, 6 }, { 0, 6 }, { 6, 6 } };
-            }
-            else if (typePiece == (int)TypeBloc.S) // Bloc S
-            {
-                blocActif = new int[2, 3] { { 0, 7, 7 }, { 7, 7, 0 } };
-            }
-            else if (typePiece == (int)TypeBloc.Z) // Bloc Z
-            {
-                blocActif = new int[2, 3] { { 8, 8, 0 }, { 0, 8, 8 } };
-            }
-            AfficherJeu();
         }
         // CDThibodeau
 
@@ -459,7 +487,6 @@ namespace TP3
         {
             Application.Exit();
         }
-        // CDThibodeau
         // CDThibodeau
 
         // CDThibodeau
@@ -661,7 +688,10 @@ namespace TP3
         // CDThibodeau
 
         // CDThibodeau
-
+        /// <summary>
+        /// Finction retirant une ligne pleine retrouvé dans le jeu.
+        /// </summary>
+        /// <param name="ligneADecaler">Ligne au-dessus de celle qui se fait effacer. Celle qui va commencer le décallement, en gros.</param>
         void RetirerLigne(int ligneADecaler)
         {
             for (int jDecalage = 0; jDecalage < tableauJeuDonnees.GetLength(1); jDecalage++)
@@ -700,18 +730,95 @@ namespace TP3
         /// <param name="lignesChoix"> entier, nouveau nombre de lignes. </param>
         /// <param name="sonCocheOuPas"> entier, valeur représentant si le son doit être arrêté ou non.</param>
         /// <param name="musiqueCocheOuPas"> entier, valeur représentant si la musique doit être arrêté ou non.</param>
-        public void AppliquerOptions(int colonnesChoix, int lignesChoix, int sonCocheOuPas, int musiqueCocheOuPas)
+        public void AppliquerOptions(int sonCocheOuPas, int musiqueCocheOuPas)
         {
             timerDescente.Start();
             sonActifOuNon = sonCocheOuPas;
             musiqueActifOuNon = musiqueCocheOuPas;
-            nbColonnes = colonnesChoix;
-            nbLignes = lignesChoix;
             if (musiqueActifOuNon == 0)
             {
                 musiqueJeu.controls.play();
             }
+        }
 
+        /// <summary>
+        /// Fonction annonçant la fin d'une partie.
+        /// </summary>
+        void FinirPartie()
+        {
+            timerDescente.Enabled = false;
+            musiqueJeu.controls.stop();
+            for (int i = 0; i < toutesImagesVisuelles.GetLength(0); i++)
+            {
+                for (int j = 0; j < toutesImagesVisuelles.GetLength(1); j++)
+                {
+                    toutesImagesVisuelles[i, j].BackgroundImage = imagesBlocs[(int)TypeBloc.Gele];
+                    toutesImagesVisuelles[i, j].BackgroundImageLayout = ImageLayout.Stretch;
+                }
+            }
+            labelFinPartie.Visible = true;
+            soundEffectFinPartie.controls.play();
+            buttonQuitterPartie.Visible = false;
+            labelRejouer.Visible = true;
+            buttonOui.Visible = true;
+            buttonNon.Visible = true;
+        }
+
+        /// <summary>
+        /// Au clic, la partie redémarre.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonOui_Click(object sender, EventArgs e)
+        {
+            labelFinPartie.Visible = false;
+            musiqueJeu.controls.play();
+            buttonQuitterPartie.Visible = true;
+            labelRejouer.Visible = false;
+            buttonOui.Visible = false;
+            buttonNon.Visible = false;
+            InitialiserSurfaceDeJeu(nbLignes, nbColonnes);
+            colonneCourante = nbColonnes / 2 - 1;
+            labelPointage.Text = "0";
+            ExecuterTestsUnitaires();
+            timerDescente.Enabled = true;
+            GenerationPiece();
+        }
+
+        /// <summary>
+        /// Au clic, l'application se ferme.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonNon_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        /// <summary>
+        /// Redémarrage du jeu en quittant les options.
+        /// </summary>
+        /// <param name="colonnesChoix">Nouveau choix de colonnes.</param>
+        /// <param name="lignesChoix">Nouveau choix de lignes.</param>
+        public void RedemarrageJeuOptions(int colonnesChoix, int lignesChoix)
+        {
+            choixColonnes = colonnesChoix;
+            choixLignes = lignesChoix;
+            nbLignes = choixLignes;
+            nbColonnes = choixColonnes;
+            labelFinPartie.Visible = false;
+            musiqueJeu.controls.play();
+            soundEffectFinPartie.controls.stop();
+            buttonQuitterPartie.Visible = true;
+            labelRejouer.Visible = false;
+            buttonOui.Visible = false;
+            buttonNon.Visible = false;
+            InitialiserSurfaceDeJeu(nbLignes, nbColonnes);
+            colonneCourante = nbColonnes / 2 - 1;
+            labelPointage.Text = "0";
+            ExecuterTestsUnitaires();
+            timerDescente.Enabled = true;
+            GenerationPiece();
         }
     }
 }
