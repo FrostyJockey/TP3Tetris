@@ -292,6 +292,10 @@ namespace TP3
         /// <param name="e"></param>
         private void timerDescente_Tick(object sender, EventArgs e)
         {
+            if (musiqueJeu.playState == WMPPlayState.wmppsStopped && musiqueActifOuNon != 1)
+            {
+                musiqueJeu.controls.play();
+            }
             BougerPiece('s');
         }
         // CDThibodeau
