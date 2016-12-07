@@ -515,9 +515,9 @@ namespace TP3
                     if (nouveauBlocActif[i, j] != 0) // Si bloc est réel
                     {
                         // Si dans les limites du tableau
-                        peutTourner = peutTourner && (colonneCourante + j) < nbColonnes;
+                        peutTourner = peutTourner && (colonneCourante + (nouveauBlocActif.GetLength(1) - 1) + j) < nbColonnes;
                         peutTourner = peutTourner && (colonneCourante + j) >= 0;
-                        peutTourner = peutTourner && (ligneCourante + i) < nbLignes;
+                        peutTourner = peutTourner && (ligneCourante + (nouveauBlocActif.GetLength(0) - 1) + i) < nbLignes;
                         // Si le prochain bloc n'est pas gelé
                         peutTourner = peutTourner && tableauJeuDonnees[ligneCourante + i, colonneCourante + j] != (int)TypeBloc.Gele;
                     }
