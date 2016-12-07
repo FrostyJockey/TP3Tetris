@@ -779,6 +779,7 @@ namespace TP3
         {
             labelFinPartie.Visible = false;
             musiqueJeu.controls.play();
+            soundEffectFinPartie.controls.stop();
             buttonQuitterPartie.Visible = true;
             labelRejouer.Visible = false;
             buttonOui.Visible = false;
@@ -835,6 +836,7 @@ namespace TP3
         private void redémarrerJeuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             labelFinPartie.Visible = false;
+            soundEffectFinPartie.controls.stop();
             musiqueJeu.controls.play();
             buttonQuitterPartie.Visible = true;
             labelRejouer.Visible = false;
