@@ -193,14 +193,14 @@ namespace TP3
         /// </summary>
         void ExecuterTestsUnitaires()
         {
-            // CDThibodeau
+            
             TestLigneSeule();
             TestLigneSeuleRetrait();
             TestLignesDoublesConsécutives();
             TestLignesDoublesNonConsécutives();
             TestTroisLignesConsécutives();
             TestQuatreLignesConsécutives();
-            // CDThibodeau
+            
         }
 
         /// <summary>
@@ -391,7 +391,7 @@ namespace TP3
 
         #endregion
 
-        // CDThibodeau
+        
         /// <summary>
         /// Fonction générant un bloc aléatoire.
         /// </summary>
@@ -440,9 +440,9 @@ namespace TP3
                 FinirPartie();
             }
         }
-        // CDThibodeau
+        
 
-        // CDThibodeau
+        
         /// <summary>
         /// Fonction vérifiant si le bloc peut bouger ou non en vérfiant si le bloc a atteint les contours ou un autre bloc gelé.
         /// Gèle le bloc si le bloc ne peut plus descendre.
@@ -453,7 +453,7 @@ namespace TP3
         {
             int offsetX = 0;
             int offsetY = 0;
-            if(deplacement == 'a') // Si déplacement à gauche
+            if (deplacement == 'a') // Si déplacement à gauche
             {
                 offsetX = -1;
             }
@@ -463,7 +463,7 @@ namespace TP3
             }
             else if (deplacement == 's') // Si déplacement vers le bas
             {
-                offsetY=1;
+                offsetY = 1;
             }
             bool peutBouger = true;
             for (int i = 0; i < blocActif.GetLength(0); i++)
@@ -483,9 +483,51 @@ namespace TP3
             }
             return peutBouger;
         }
-        // CDThibodeau
 
-        // CDThibodeau
+        bool BlocPeutTourner(int deplacement)
+        {
+            int[,] nouveauBlocActif = new int[blocActif.GetLength(1), blocActif.GetLength(0)];
+            if (deplacement == 'q')
+            {
+                for (int i = 0; i < blocActif.GetLength(1); i++)
+                {
+                    for (int j = 0; j < blocActif.GetLength(0); j++)
+                    {
+                        nouveauBlocActif[i, j] = blocActif[j, blocActif.GetLength(1) - 1 - i];
+                    }
+                }
+            }
+            else if (deplacement == 'e')
+            {
+                for (int i = 0; i < blocActif.GetLength(1); i++)
+                {
+                    for (int j = 0; j < blocActif.GetLength(0); j++)
+                    {
+                        nouveauBlocActif[i, j] = blocActif[blocActif.GetLength(0)-1 - j, i];
+                    }
+                }
+            }
+            bool peutTourner = true;
+            for (int i = 0; i < nouveauBlocActif.GetLength(0); i++)
+            {
+                for (int j = 0; j < nouveauBlocActif.GetLength(1); j++)
+                {
+                    if (nouveauBlocActif[i, j] != 0) // Si bloc est réel
+                    {
+                        // Si dans les limites du tableau
+                        peutTourner = peutTourner && (colonneCourante + j) < nbColonnes;
+                        peutTourner = peutTourner && (colonneCourante + j) >= 0;
+                        peutTourner = peutTourner && (ligneCourante + i) < nbLignes;
+                        // Si le prochain bloc n'est pas gelé
+                        peutTourner = peutTourner && tableauJeuDonnees[ligneCourante + i, colonneCourante + j] != (int)TypeBloc.Gele;
+                    }
+                }
+            }
+            return peutTourner;
+        }
+        
+
+        
         /// <summary>
         /// Quitte le jeu.
         /// </summary>
@@ -495,9 +537,9 @@ namespace TP3
         {
             Application.Exit();
         }
-        // CDThibodeau
+        
 
-        // CDThibodeau
+        
         /// <summary>
         /// Évènement descendant le bloc à chaque 0.5 seconde.
         /// </summary>
@@ -511,9 +553,9 @@ namespace TP3
             }
             BougerPiece('s');
         }
-        // CDThibodeau
+        
 
-        // CDThibodeau
+        
         /// <summary>
         /// Fonction affichant le bloc sur le tableau de jeu en fonction de la position des blocs.
         /// </summary>
@@ -552,7 +594,7 @@ namespace TP3
         }
         //CDThibodeau
 
-        // CDThibodeau
+        
         /// <summary>
         /// Fonction gelant le bloc actif lorsqu'il ne peut plus descendre.
         /// </summary>
@@ -582,7 +624,7 @@ namespace TP3
                 GenerationPiece();
             }
         }
-        // CDThibodeau
+        
 
         //CDThibodeau
         /// <summary>
@@ -618,9 +660,40 @@ namespace TP3
             }
             
         }
-        // CDThibodeau
 
-        // CDThibodeau
+        void TournerPiece(int deplacement)
+        {
+            int[,] nouveauBlocActif = new int[blocActif.GetLength(1), blocActif.GetLength(0)];
+            if (deplacement == 'q')
+            {
+                for (int i = 0; i < blocActif.GetLength(1); i++)
+                {
+                    for (int j = 0; j < blocActif.GetLength(0); j++)
+                    {
+                        nouveauBlocActif[i, j] = blocActif[j, blocActif.GetLength(1) - 1 - i];
+                    }
+                }
+                blocActif = nouveauBlocActif;
+            }
+            else if (deplacement == 'e')
+            {
+                for (int i = 0; i < blocActif.GetLength(1); i++)
+                {
+                    for (int j = 0; j < blocActif.GetLength(0); j++)
+                    {
+                        nouveauBlocActif[i, j] = blocActif[blocActif.GetLength(0) - 1 - j, i];
+                    }
+                }
+                blocActif = nouveauBlocActif;
+            }
+            if (BlocPeutTourner(deplacement) == true)
+            {
+                AfficherJeu();
+            }
+        }
+        
+
+        
         /// <summary>
         /// Fonction appelant une autre fonction lorsqu'une touche est appuyée.
         /// </summary>
@@ -629,10 +702,11 @@ namespace TP3
         private void TitrisForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             BougerPiece(e.KeyChar);
+            TournerPiece(e.KeyChar);
         }
-        // CDThibodeau
+        
 
-        // CDThibodeau
+        
         /// <summary>
         /// Fonction qui décale les lignes si le jeu contient une ligne pleine.
         /// </summary>
@@ -672,9 +746,9 @@ namespace TP3
             }
             return nbLignesRetires;
         }
-        // CDThibodeau
+        
 
-        // CDThibodeau
+        
         /// <summary>
         /// Fonction vérifiant s'il y a une ligne pleine à la ligne "ligneAVerifier" dans le tableau "tableauJeuDonnees".
         /// </summary>
@@ -692,9 +766,9 @@ namespace TP3
             }
             return decalageEstPossible;
         }
-        // CDThibodeau
+        
 
-        // CDThibodeau
+        
         /// <summary>
         /// Finction retirant une ligne pleine retrouvé dans le jeu.
         /// </summary>
@@ -709,7 +783,7 @@ namespace TP3
         }
 
 
-        // CDThibodeau
+        
         /// <summary>
         /// Fonction faisant apparaître le formulaire des options.
         /// </summary>
@@ -727,7 +801,7 @@ namespace TP3
                 musiqueJeu.controls.play();
             }
         }
-        // CDThibodeau
+        
 
         /// <summary>
         /// Fonction appliquant les options de l'autre formulaire à celui-ci.
