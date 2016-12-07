@@ -43,25 +43,17 @@ namespace TP3
 
         #endregion
 
-        public Options(TitrisForm formulaireActif)
+        public Options(TitrisForm formulaireActif, int nbColonnes, int nbLignes)
         {
             InitializeComponent();
-            titrisJeuActif = formulaireActif;
-        }
-
-        /// <summary>
-        /// Initiallise les barres pour qu'ils soient sur le nombre de colonnes et de lignes.
-        /// </summary>
-        /// <param name="nbColonnes">Nombre de colonnes courant</param>
-        /// <param name="nbLignes">Nombre de lignes courant</param>
-        public void InitialiserOptions(int nbColonnes, int nbLignes)
-        {
+            titrisJeuActif = formulaireActif; // Assignation du formulaire à une valeur.
             barreColonnes = nbColonnes;
             barreLignes = nbLignes;
             trackBarColonnes.Value = barreColonnes;
+            textBoxColonnes.Text = barreColonnes.ToString();
             trackBarLignes.Value = barreLignes;
+            textBoxLignes.Text = barreLignes.ToString();
         }
-
 
         /// <summary>
         /// Au clic, appel la fonction appliquant les options.

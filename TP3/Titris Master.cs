@@ -1,4 +1,13 @@
-﻿using System;
+﻿/// Travail pratique 3 «Titris Master»
+/// 
+/// Auteur: Charles-David Thibodeau
+/// 
+/// Co-auteur: Pierre Poulin (code d'initialisation de tableau)
+/// 
+/// Malheureusement, Diego n'a pas vraiment écrit de code, donc toutes les fonctions et valeurs partagées sont fait par l'auteur.
+/// 
+
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -444,15 +453,15 @@ namespace TP3
         {
             int offsetX = 0;
             int offsetY = 0;
-            if(deplacement == 'a')
+            if(deplacement == 'a') // Si déplacement à gauche
             {
                 offsetX = -1;
             }
-            else if (deplacement == 'd')
+            else if (deplacement == 'd') // Si déplacement à droite
             {
                 offsetX = 1;
             }
-            else if (deplacement == 's')
+            else if (deplacement == 's') // Si déplacement vers le bas
             {
                 offsetY=1;
             }
@@ -461,14 +470,13 @@ namespace TP3
             {
                 for (int j = 0; j < blocActif.GetLength(1); j++)
                 {
-                    // Si reel bloc
-                  if(blocActif[i,j] != 0)
+                  if(blocActif[i,j] != 0) // Si bloc est réel
                     {
                         // Si dans les limites du tableau
                         peutBouger = peutBouger && (colonneCourante + j + offsetX) < nbColonnes;
                         peutBouger = peutBouger && (colonneCourante + j + offsetX) >= 0;
                         peutBouger = peutBouger && (ligneCourante + i + offsetY) < nbLignes;
-                        // Si pas le prochain bloc gelé
+                        // Si le prochain bloc n'est pas gelé
                         peutBouger = peutBouger && tableauJeuDonnees[ligneCourante + i + offsetY, colonneCourante + j + offsetX] != (int) TypeBloc.Gele;
                     }
                 }
@@ -497,7 +505,7 @@ namespace TP3
         /// <param name="e"></param>
         private void timerDescente_Tick(object sender, EventArgs e)
         {
-            if (musiqueJeu.playState == WMPPlayState.wmppsStopped && musiqueActifOuNon != 1)
+            if (musiqueJeu.playState == WMPPlayState.wmppsStopped && musiqueActifOuNon != 1) // Si la musique n'est pas désactivée
             {
                 musiqueJeu.controls.play();
             }
@@ -515,13 +523,13 @@ namespace TP3
             {
                 for (int j = 0; j < toutesImagesVisuelles.GetLength(1); j++)
                 {
-                    if (tableauJeuDonnees[i, j] == (int)TypeBloc.Aucun)
+                    if (tableauJeuDonnees[i, j] == (int)TypeBloc.Aucun) // Si la donnée à la position [i, j] est 0...
                     {
-                        toutesImagesVisuelles[i, j].BackgroundImage = imagesBlocs[(int)TypeBloc.Aucun];
+                        toutesImagesVisuelles[i, j].BackgroundImage = imagesBlocs[(int)TypeBloc.Aucun]; // ...image de fond revient rien.
                     }
                     else
                     {
-                        toutesImagesVisuelles[i, j].BackgroundImage = imagesBlocs[(int)TypeBloc.Gele];
+                        toutesImagesVisuelles[i, j].BackgroundImage = imagesBlocs[(int)TypeBloc.Gele]; // image de fond devient gelée.
                     }
                 }
             }
@@ -530,9 +538,9 @@ namespace TP3
             {
                 for (int j = 0; j < blocActif.GetLength(1); j++)
                 {
-                    if (ligneCourante + blocActif.GetLength(0) - 1 != nbLignes)
+                    if (ligneCourante + blocActif.GetLength(0) - 1 != nbLignes) // Si le bloc n'atteint pas le fond
                     {
-                        if (blocActif[i, j] != 0)
+                        if (blocActif[i, j] != (int)TypeBloc.Aucun) // Si la partie du bloc n'est pas rien
                         {
                             toutesImagesVisuelles[ligneCourante + i, colonneCourante + j].BackgroundImage = imagesBlocs[typePiece];
                         }
@@ -540,8 +548,7 @@ namespace TP3
                             
                     }
                 }
-            }
-                
+            }   
         }
         //CDThibodeau
 
@@ -551,20 +558,20 @@ namespace TP3
         /// </summary>
         void GelerPiece()
         {
-            if (BlocPeutBouger('s') == false)
+            if (BlocPeutBouger('s') == false) // Si le bloc ne peut plus bouger
             {
                 for (int i = 0; i < blocActif.GetLength(0); i++)
                 {
                     for (int j = 0; j < blocActif.GetLength(1); j++)
                     {
-                        if (blocActif[i,j] !=0)
+                        if (blocActif[i,j] != (int)TypeBloc.Aucun) // Si la partie du bloc n'est pas rien...
                         {
-                            tableauJeuDonnees[ligneCourante + i, colonneCourante + j] = (int)TypeBloc.Gele;
+                            tableauJeuDonnees[ligneCourante + i, colonneCourante + j] = (int)TypeBloc.Gele; // ... partie devient gelée.
                         }
 
                     }
                 }
-                if (sonActifOuNon == 0)
+                if (sonActifOuNon == 0) // Si le son est actif
                 {
                     soundEffectsGeler.controls.play();
                 }
@@ -586,15 +593,15 @@ namespace TP3
         {
             int offsetX = 0;
             int offsetY = 0;
-            if (deplacement == 'a')
+            if (deplacement == 'a') // Si déplacement gauche
             {
                 offsetX = -1;
             }
-            else if (deplacement == 'd')
+            else if (deplacement == 'd') // Si déplacement droite
             {
                 offsetX = 1;
             }
-            else if (deplacement == 's')
+            else if (deplacement == 's') // Si déplacement bas
             {
                 offsetY = 1;
             }
@@ -640,12 +647,12 @@ namespace TP3
             {
                 for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++)
                 {
-                    ligneAVerifier[j] = tableauJeuDonnees[(tableauJeuDonnees.GetLength(0)-1) - i, j];
+                    ligneAVerifier[j] = tableauJeuDonnees[(tableauJeuDonnees.GetLength(0)-1) - i, j]; // Initiallisation de la ligne à analyser
                 }
                 decalageEstPossible = VerifierLignesPleines(ligneAVerifier);
                 if (decalageEstPossible == true)
                 {
-                    if (sonActifOuNon == 0)
+                    if (sonActifOuNon == 0) // Si le son est actif
                     {
                         soundEffectsLigneRetrait.controls.play();
                     }
@@ -655,12 +662,12 @@ namespace TP3
                     {
                         for (int jDecalage = 0; jDecalage < tableauJeuDonnees.GetLength(1); jDecalage++)
                         {
-                            toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage].BackgroundImage = toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 2 - ligneADecaler) - iDecalage, jDecalage].BackgroundImage;
-                            tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage] = tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 2 - ligneADecaler) - iDecalage, jDecalage];
+                            toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage].BackgroundImage = toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 2 - ligneADecaler) - iDecalage, jDecalage].BackgroundImage; // Décalage des images
+                            tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 1 - ligneADecaler) - iDecalage, jDecalage] = tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 2 - ligneADecaler) - iDecalage, jDecalage]; // Décalage des données
                         }
                     }
-                    nbLignesRetires += 10;
-                    i--;
+                    nbLignesRetires += 10; // 10 points~!
+                    i--; // Revérification
                 }
             }
             return nbLignesRetires;
@@ -678,7 +685,7 @@ namespace TP3
             bool decalageEstPossible = true;
             for (int j = 0; j < tableauJeuDonnees.GetLength(1); j++)
             {
-                if (ligneAVerifier[j] != (int)TypeBloc.Gele)
+                if (ligneAVerifier[j] != (int)TypeBloc.Gele) // Si un bloc n'est pas gelé
                 {
                     decalageEstPossible = false;
                 }
@@ -696,8 +703,8 @@ namespace TP3
         {
             for (int jDecalage = 0; jDecalage < tableauJeuDonnees.GetLength(1); jDecalage++)
             {
-                toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler), jDecalage].BackgroundImage = imagesBlocs[(int)TypeBloc.Aucun];
-                tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 1 - ligneADecaler), jDecalage] = (int)TypeBloc.Aucun;
+                toutesImagesVisuelles[(toutesImagesVisuelles.GetLength(0) - 1 - ligneADecaler), jDecalage].BackgroundImage = imagesBlocs[(int)TypeBloc.Aucun]; // Effacement des images formant la ligne
+                tableauJeuDonnees[(tableauJeuDonnees.GetLength(0) - 1 - ligneADecaler), jDecalage] = (int)TypeBloc.Aucun; // Effacement des données formant la ligne
             }
         }
 
@@ -710,13 +717,12 @@ namespace TP3
         /// <param name="e"></param>
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Options optionMenu = new Options(this);
+            Options optionMenu = new Options(this, nbColonnes, nbLignes);
             musiqueJeu.controls.stop();
             timerDescente.Stop();
-            optionMenu.InitialiserOptions(nbColonnes, nbLignes);
             DialogResult optionClicBouton = optionMenu.ShowDialog();
             timerDescente.Start();
-            if (musiqueActifOuNon == 0)
+            if (musiqueActifOuNon == 0) // Si la music est active
             {
                 musiqueJeu.controls.play();
             }
@@ -735,7 +741,7 @@ namespace TP3
             timerDescente.Start();
             sonActifOuNon = sonCocheOuPas;
             musiqueActifOuNon = musiqueCocheOuPas;
-            if (musiqueActifOuNon == 0)
+            if (musiqueActifOuNon == 0) // Si musique est active
             {
                 musiqueJeu.controls.play();
             }
@@ -752,11 +758,11 @@ namespace TP3
             {
                 for (int j = 0; j < toutesImagesVisuelles.GetLength(1); j++)
                 {
-                    toutesImagesVisuelles[i, j].BackgroundImage = imagesBlocs[(int)TypeBloc.Gele];
+                    toutesImagesVisuelles[i, j].BackgroundImage = imagesBlocs[(int)TypeBloc.Gele]; // Effet où le tableau est recouvert
                     toutesImagesVisuelles[i, j].BackgroundImageLayout = ImageLayout.Stretch;
                 }
             }
-            labelFinPartie.Visible = true;
+            labelFinPartie.Visible = true; // Le supposé formulaire de fin de partie (voir document word pour explication)
             soundEffectFinPartie.controls.play();
             buttonQuitterPartie.Visible = false;
             labelRejouer.Visible = true;
@@ -782,7 +788,7 @@ namespace TP3
             labelPointage.Text = "0";
             ExecuterTestsUnitaires();
             timerDescente.Enabled = true;
-            GenerationPiece();
+            GenerationPiece(); // Redémarrage normal
         }
 
         /// <summary>
@@ -818,7 +824,28 @@ namespace TP3
             labelPointage.Text = "0";
             ExecuterTestsUnitaires();
             timerDescente.Enabled = true;
-            GenerationPiece();
+            GenerationPiece(); // Redémarrage avec le nouveau tableau
+        }
+
+        /// <summary>
+        /// Au cic, la partie redémarre.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void redémarrerJeuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            labelFinPartie.Visible = false;
+            musiqueJeu.controls.play();
+            buttonQuitterPartie.Visible = true;
+            labelRejouer.Visible = false;
+            buttonOui.Visible = false;
+            buttonNon.Visible = false;
+            InitialiserSurfaceDeJeu(nbLignes, nbColonnes);
+            colonneCourante = nbColonnes / 2 - 1;
+            labelPointage.Text = "0";
+            ExecuterTestsUnitaires();
+            timerDescente.Enabled = true;
+            GenerationPiece(); // Redémarrage normal
         }
     }
 }

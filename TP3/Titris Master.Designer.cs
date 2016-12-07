@@ -183,6 +183,7 @@
             this.redémarrerJeuToolStripMenuItem.Name = "redémarrerJeuToolStripMenuItem";
             this.redémarrerJeuToolStripMenuItem.Size = new System.Drawing.Size(92, 20);
             this.redémarrerJeuToolStripMenuItem.Text = "Redémarrer jeu";
+            this.redémarrerJeuToolStripMenuItem.Click += new System.EventHandler(this.redémarrerJeuToolStripMenuItem_Click);
             // 
             // tableLayoutPanelStatistiques
             // 
